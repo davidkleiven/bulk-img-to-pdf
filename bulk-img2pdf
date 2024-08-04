@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+echo "Converting HEIC to jpg"
+
+mkdir -p jpg
+for fname in *.HEIC
+do
+    out="jpg/$(echo $fname | awk -F . '{print $1}').jpg"
+    heif-convert $fname $out
+done
+
+echo "Removing auxillary image"
+rm jpg/*hdrgainmap.jpg
+
+echo "Moving JPG pictures directly into the jpg folder"
+mv *.jpg *.JPG jpg
+
+echo "Standardizing file extensions"
+for fname in jpg/*.JPG
+do
+    mv "$fname" "${fname%.JPG}.jpg"
+done
+
+inbac jpg
+echo "Converting images to monochrome"
+
+mkdir -p jpg/monochrome
+for fname in jpg/crops/*.jpg
+do
+    echo "Converting $fname"
+    noFolder=$(echo $fname | sed 'sXjpg/crops/XXg')
+    out="jpg/monochrome/$(echo $noFolder | awk -F . '{print $1}').jpg"
+    convert $fname -threshold 60% -resize 1600x $out
+done
+
+echo "Collecting converted results into one pdf"
+finalPdf="result.pdf"
+convert "jpg/monochrome/*.jpg" $finalPdf
+echo "Final PDF written to $finalPdf"
