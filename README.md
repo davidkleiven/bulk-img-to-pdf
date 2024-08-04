@@ -11,4 +11,4 @@ make install
 
 Put images in a folder. From the folder with all images, execute bulk-img2pdf.
 
-See (inbac documentation)[https://github.com/weclaw1/inbac] for how to do the cropping step
+See [inbac documentation](https://github.com/weclaw1/inbac) for how to do the cropping step
